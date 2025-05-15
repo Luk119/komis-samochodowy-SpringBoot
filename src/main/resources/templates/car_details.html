@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Szczegóły pojazdu | Komis Samochodowy</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .back-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #0066cc;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        .back-button:hover {
+            background-color: #014485;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #0066cc;
+        }
+
+        .car-details {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .image-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .main-image-wrapper {
+            width: 100%;
+            max-height: 500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .main-image {
+            max-width: 100%;
+            max-height: 450px;
+            object-fit: contain;
+            border-radius: 10px;
+        }
+
+        .thumbnail-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 10px;
+        }
+
+        .thumbnail {
+            width: 100px;
+            height: 75px;
+            object-fit: contain;
+            border: 2px solid #c8c8c8;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: white;
+            padding: 5px;
+        }
+
+        .thumbnail:hover {
+            transform: scale(1.05);
+            border-color: #0066cc;
+        }
+
+        .thumbnail.active {
+            border: 2px solid #0066cc;
+        }
+
+        .car-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #616161;
+        }
+
+        .car-title {
+            margin: 0;
+            font-size: 24px;
+            color: #333;
+        }
+
+        .car-price {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e63946;
+            margin: 0;
+        }
+
+        .specs-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin: 25px 0;
+            padding: 20px 0;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+        }
+
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+
+        .spec-label {
+            font-weight: bold;
+            color: #555;
+        }
+
+        .spec-value {
+            color: #0066cc;
+            font-weight: 500;
+        }
+
+        .car-description {
+            line-height: 1.6;
+            margin: 25px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .contact-section {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(0, 102, 204, 0.31);
+            border-radius: 8px;
+            color: white;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 12px 25px;
+            margin: 10px;
+            background: white;
+            color: #0066cc;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .cta-button:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .specs-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .car-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .car-price {
+                font-size: 20px;
+            }
+
+            .thumbnail {
+                width: 80px;
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+<a href="../html/index.html" class="back-button">← Strona główna</a>
+<h1>car.brand (do poprawy)</h1>
+
+<section class="car-details">
+    <div class="image-container">
+        <div class="main-image-wrapper">
+            <img src="" alt="Główne zdjęcie pojazdu" class="main-image" id="mainCarImage">
+        </div>
+
+        <div class="thumbnail-gallery" id="thumbnailGallery">
+            <!-- Miniaturki będą generowane przez JS -->
+        </div>
+    </div>
+
+    <div class="car-header">
+        <h2 class="car-title" id="carTitle"></h2>
+        <div class="car-price" id="carPrice"></div>
+    </div>
+
+    <div class="specs-grid" id="carSpecs">
+        <!-- Specyfikacje będą generowane przez JS -->
+    </div>
+
+    <div class="car-description" id="carDescription"></div>
+
+    <div class="contact-section">
+        <h3>Zainteresowany tym pojazdem?</h3>
+        <button class="cta-button">Umów jazdę próbną</button>
+        <button class="cta-button">Zapytaj o ofertę</button>
+    </div>
+</section>
+
+<script>
+    // Dane pojazdów
+    const carsData = [
+        {
+            id: 1,
+            brand: "Audi",
+            model: "A4",
+            engine: "2.0",
+            gearbox: "Automatyczna",
+            power: "190 KM",
+            fuel: "Benzyna",
+            year: 2018,
+            price: 85000,
+            mileage: 120000,
+            color: "Czarny",
+            images: [
+                "../images/audi_a4_1.png",
+                "../images/audi_a4_2.png",
+                "../images/audi_a4_3.png",
+                "../images/audi_a4_4.png",
+                "../images/audi_a4_5.png"
+            ],
+            description: "Audi A4 z 2018 roku to elegancki sedan premium, który łączy w sobie nowoczesną technologię" +
+                " z wyjątkowym komfortem jazdy. Wyposażony w dynamiczny silnik benzynowy o pojemności 2.0 litra i" +
+                " mocy 190 KM, oferuje doskonałe osiągi, a automatyczna skrzynia biegów zapewnia płynność i wygodę " +
+                "prowadzenia. Czarny lakier nadaje mu luksusowego charakteru, podkreślając jego stylową sylwetkę." +
+                " Wnętrze pojazdu to połączenie wysokiej jakości materiałów i zaawansowanych systemów multimedialnych," +
+                " które gwarantują przyjemność z każdej podróży. Samochód posiada przebieg 120 000 km, co jest " +
+                "wynikiem umiarkowanym dla tego rocznika, a jego cena 85 000 zł sprawia, że jest to atrakcyjna oferta" +
+                " na rynku. Idealny dla osób, które cenią komfort, prestiż i solidne wykonanie, a jednocześnie chcą " +
+                "korzystać z zalet nowoczesnych technologii Audi."
+        },
+        {
+            id: 2,
+            brand: "BMW",
+            model: "320i",
+            engine: "2.0",
+            gearbox: "Manualna",
+            power: "150 KM",
+            fuel: "Benzyna",
+            year: 2006,
+            price: 20000,
+            mileage: 300000,
+            color: "Czarny",
+            images: [
+                "../images/bmw_320i_1.png",
+                "../images/bmw_320i_2.png",
+                "../images/bmw_320i_3.png",
+                "../images/bmw_320i_4.png",
+                "../images/bmw_320i_5.png"
+            ],
+            description: "BMW 320i z 2006 roku to klasyczny sedan, który wciąż cieszy się dużą popularnością" +
+                " dzięki połączeniu sportowego charakteru i solidnej niemieckiej inżynierii. Wyposażony w silnik " +
+                "benzynowy o pojemności 2.0 litra i mocy 150 KM, zapewnia dynamiczne osiągi, a manualna skrzynia " +
+                "biegów pozwala na pełną kontrolę nad jazdą, co zadowoli każdego entuzjastę motoryzacji. Samochód " +
+                "posiada przebieg 300 000 km, co świadczy o jego trwałości i solidnej konstrukcji. Czarny lakier" +
+                " nadaje pojazdowi elegancji, a klasyczny design wnętrza BMW oferuje komfort i ergonomię. " +
+                "Mimo swojego wieku, pojazd jest w dobrym stanie, co czyni go doskonałą propozycją dla osób" +
+                " szukających niezawodnego auta z charakterem, które dostarcza frajdy z jazdy i posiada " +
+                "ponadczasowy styl."
+        },
+        {
+            id: 3,
+            brand: "Toyota",
+            model: "Corolla",
+            engine: "1.8 Hybrid",
+            gearbox: "Automatyczna",
+            power: "140 KM",
+            fuel: "benzyna",
+            year: 2024,
+            price: 135000,
+            mileage: 2000,
+            color: "Biały",
+            images: [
+                "../images/toyota_corolla_1.png",
+                "../images/toyota_corolla_2.png",
+                "../images/toyota_corolla_3.png",
+                "../images/toyota_corolla_4.png",
+                "../images/toyota_corolla_5.png",
+                "../images/toyota_corolla_6.png"
+            ],
+            description: "Toyota Corolla Hybrid z 2024 roku to nowoczesny sedan, który doskonale łączy oszczędność " +
+                "paliwa z dynamiką jazdy. Wyposażona w hybrydowy silnik o pojemności 1.8 litra i mocy 140 KM, zapewnia" +
+                " płynną, cichą i ekonomiczną jazdę, zarówno w mieście, jak i na dłuższych trasach. Automatyczna " +
+                "skrzynia biegów gwarantuje komfort prowadzenia, a biały lakier nadaje pojazdowi elegancki, nowoczesny" +
+                " wygląd. Wnętrze Corolli to przestrzeń zaprojektowana z myślą o wygodzie kierowcy i pasażerów, " +
+                "oferując nowoczesne technologie oraz wysokiej jakości materiały wykończeniowe. Dzięki niskiemu " +
+                "przebiegowi wynoszącemu zaledwie 2000 km, pojazd jest praktycznie jak nowy, co czyni go idealnym " +
+                "wyborem dla osób poszukujących niezawodnego, oszczędnego i stylowego auta do codziennego użytku."
+        },
+        {
+            id: 4,
+            brand: "Toyota",
+            model: "RAV4",
+            engine: "2.5 Hybrid",
+            gearbox: "Automatyczna",
+            power: "178 KM",
+            fuel: "benzyna",
+            year: 2022,
+            price: 149900,
+            mileage: 12000,
+            color: "Perłowa biel",
+            images: [
+                "../images/toyota_rav-4_1.png",
+                "../images/toyota_rav-4_2.png",
+                "../images/toyota_rav-4_3.png",
+                "../images/toyota_rav-4_4.png",
+                "../images/toyota_rav-4_5.png",
+                "../images/toyota_rav-4_6.png",
+                "../images/toyota_rav-4_7.png"
+            ],
+            description: "Toyota RAV4 Hybrid z 2022 roku to nowoczesny SUV, który łączy w sobie wydajność hybrydowego " +
+                "układu napędowego z przestronnością i komfortem jazdy. Pod maską kryje się silnik o pojemności 2.5" +
+                " litra, wspierany przez technologię hybrydową, zapewniający 178 KM mocy i płynne przyspieszenie. " +
+                "Automatyczna skrzynia biegów gwarantuje bezproblemową jazdę zarówno w mieście, jak i na trasie. " +
+                "Czarny, elegancki lakier nadaje pojazdowi nowoczesny wygląd, a wnętrze oferuje przestronność i" +
+                " funkcjonalność, idealne na rodzinne podróże. Dzięki przebiegowi wynoszącemu zaledwie 12 000 km," +
+                " samochód jest w doskonałym stanie technicznym. Toyota RAV4 Hybrid to idealny wybór dla osób" +
+                " szukających połączenia ekologii, niezawodności oraz komfortu na najwyższym poziomie."
+        }
+    ];
+
+    // Pobierz ID pojazdu z URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const carId = parseInt(urlParams.get('id')) || 1;
+    const car = carsData.find(c => c.id === carId) || carsData[0];
+
+    // Funkcja do zmiany głównego zdjęcia
+    function changeMainImage(imageSrc, thumbnailElement) {
+        const mainImg = document.getElementById('mainCarImage');
+
+        // Animacja przejścia
+        mainImg.style.opacity = 0;
+        setTimeout(() => {
+            mainImg.src = imageSrc;
+            mainImg.style.opacity = 1;
+        }, 150);
+
+        // Aktualizacja aktywnych miniaturek
+        document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+        thumbnailElement.classList.add('active');
+    }
+
+    // Wyświetl szczegóły pojazdu
+    function displayCarDetails() {
+        // Podstawowe informacje
+        document.getElementById('carTitle').textContent = `${car.brand} ${car.model}`;
+        document.getElementById('carPrice').textContent = `${car.price.toLocaleString()} PLN`;
+        document.getElementById('carDescription').textContent = car.description;
+
+        // Główne zdjęcie
+        if (car.images.length > 0) {
+            document.getElementById('mainCarImage').src = car.images[0];
+        }
+
+        // Generuj miniaturki
+        const gallery = document.getElementById('thumbnailGallery');
+        gallery.innerHTML = '';
+
+        car.images.forEach((img, index) => {
+            const thumbnail = document.createElement('img');
+            thumbnail.src = img;
+            thumbnail.alt = `${car.brand} ${car.model} - zdjęcie ${index + 1}`;
+            thumbnail.className = `thumbnail ${index === 0 ? 'active' : ''}`;
+            thumbnail.addEventListener('click', (e) => changeMainImage(img, e.currentTarget));
+            gallery.appendChild(thumbnail);
+        });
+
+        // Generuj specyfikację
+        const specsContainer = document.getElementById('carSpecs');
+        specsContainer.innerHTML = '';
+
+        const specifications = [
+            { label: 'Rok produkcji:', value: car.year },
+            { label: 'Przebieg:', value: `${car.mileage.toLocaleString()} km` },
+            { label: 'Silnik:', value: car.engine },
+            { label: 'Moc:', value: car.power },
+            { label: 'Skrzynia biegów:', value: car.gearbox },
+            { label: 'Paliwo:', value: car.fuel },
+            { label: 'Kolor:', value: car.color }
+        ];
+
+        specifications.forEach(spec => {
+            const specElement = document.createElement('div');
+            specElement.className = 'spec-item';
+            specElement.innerHTML = `
+                    <span class="spec-label">${spec.label}</span>
+                    <span class="spec-value">${spec.value}</span>
+                `;
+            specsContainer.appendChild(specElement);
+        });
+    }
+
+    // Inicjalizacja po załadowaniu strony
+    window.addEventListener('DOMContentLoaded', () => {
+        displayCarDetails();
+
+        // Dodatkowe efekty interakcji
+        document.querySelectorAll('.thumbnail').forEach(thumb => {
+            thumb.addEventListener('mouseenter', () => {
+                thumb.style.transform = 'scale(1.1)';
+            });
+            thumb.addEventListener('mouseleave', () => {
+                thumb.style.transform = 'scale(1)';
+            });
+        });
+    });
+</script>
+</body>
+</html>
